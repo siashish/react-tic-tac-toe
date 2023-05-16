@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Board from "./board";
 
 function Game() {
@@ -10,28 +10,22 @@ function Game() {
     const squares = history[stepNumber];
     
     function handleClick(i){
-        // Ye kaam ni kr rha 
-        // const newHistory = history.slice(0, stepNumber + 1);
-        // const squares = history[history.length - 1];
-        // if (calculateWinner(squares) || squares[i]) {
-        //     return;
-        // }
-        // squares[i] = xIsNext ? 'X' : 'O';
-        // setHistory([...newHistory, squares])
-        // setxIsNext(!xIsNext);
-        // setStepNumber(newHistory.length)
-        console.log(stepNumber, "stepnumber")
         const newA = history.slice(0,stepNumber+1);
         const newsquare = squares.slice();
         if (calculateWinner(squares) || squares[i]) {
           return;                               
         }
         newsquare[i] = xIsNext ? 'X' : 'O';
-        setHistory([...newA,newsquare])
+        newA.push(newsquare);
+        setHistory(newA)
+        console.log(newA)
         setxIsNext(!xIsNext);
-        console.log(history)
         setStepNumber(history.length)
     }
+    
+    useEffect(() => {
+        setHistory(history.slice(0,stepNumber+1));
+      }, [stepNumber]);
 
     const winner = calculateWinner(squares);
     let status;
@@ -73,7 +67,6 @@ function Game() {
       });
 
     function jumpTo(step) {
-        console.log("move" +  step );
         setxIsNext((step % 2) === 0);
         setStepNumber(step);
       }
